@@ -4,7 +4,7 @@ from django.db import models
 from users.models import StudentProfile, LecturerProfile
 from academics.models import AcademicSession, Semester
 
-
+#hello world
 LEVEL_CHOICES = [100, 200, 300, 400, 500]
 DEPARTMENT_CHOICES = [
     'Computer Science',
