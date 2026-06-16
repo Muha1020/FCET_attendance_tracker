@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useAuthStore } from '../store/auth'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api',
+  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8000',
 })
 
 // Inject access token on every request
@@ -60,7 +60,7 @@ api.interceptors.response.use(
 
     try {
       const { data } = await axios.post(
-        `${api.defaults.baseURL}/auth/refresh/`,
+        `${api.defaults.baseURL}/api/auth/refresh/`,
         { refresh }
       )
       const newAccess: string = data.access

@@ -7,7 +7,7 @@ import type {
 } from '../types'
 
 export const login = (data: LoginRequest) =>
-  api.post<LoginResponse>('/auth/login/', data).then((r) => r.data)
+  api.post<LoginResponse>('/api/auth/login/', data).then((r) => r.data)
 
 export const register = (data: RegisterRequest) =>
-  api.post<RegisterResponse>('/auth/register/', data).then((r) => r.data)
+  api.post<RegisterResponse>('/api/auth/register/', data).then((r) => r.data)
