@@ -5,6 +5,7 @@ from .models import AttendanceSession, AttendanceRecord
 
 class AttendanceSessionSerializer(serializers.ModelSerializer):
     course_code = serializers.CharField(source='course.course_code', read_only=True)
+    course_name = serializers.CharField(source='course.course_name', read_only=True)
     created_by_name = serializers.CharField(source='created_by.full_name', read_only=True)
 
     class Meta:
@@ -13,6 +14,7 @@ class AttendanceSessionSerializer(serializers.ModelSerializer):
             'id',
             'course',
             'course_code',
+            'course_name',
             'date',
             'is_active',
             'created_by',
@@ -50,4 +52,15 @@ class AttendanceRecordSerializer(serializers.ModelSerializer):
             'status',
             'failure_reason',
         ]
+        read_only_fields = fields
+
+
+class StudentHistoryRecordSerializer(serializers.ModelSerializer):
+    course_code = serializers.CharField(source='attendance_session.course.course_code', read_only=True)
+    course_name = serializers.CharField(source='attendance_session.course.course_name', read_only=True)
+    session_date = serializers.DateField(source='attendance_session.date', read_only=True)
+
+    class Meta:
+        model = AttendanceRecord
+        fields = ['id', 'course_code', 'course_name', 'session_date', 'timestamp', 'status', 'failure_reason']
         read_only_fields = fields

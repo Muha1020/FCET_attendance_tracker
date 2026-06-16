@@ -5,11 +5,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
 
+from academics.models import AcademicSession, Semester
 from users.models import StudentProfile
 from users.serializers import StudentProfileSerializer
 from users.permissions import IsLecturer
 from .models import Course, ClassEnrollment
-from .serializers import CourseSerializer, AssignRepSerializer
+from .serializers import CourseSerializer, CourseCreateSerializer, AssignRepSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -40,8 +41,30 @@ class CourseViewSet(viewsets.ModelViewSet):
             return [IsAuthenticated(), IsLecturer()]
         return [IsAuthenticated()]
 
-    def perform_create(self, serializer):
-        serializer.save(lecturer=self.request.user.lecturer_profile)
+    def create(self, request, *args, **kwargs):
+        serializer = CourseCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        start, end = map(int, data['session_name'].split('/'))
+        academic_session, _ = AcademicSession.objects.get_or_create(
+            session_name=data['session_name'],
+            defaults={'start_year': start, 'end_year': end},
+        )
+        semester, _ = Semester.objects.get_or_create(
+            academic_session=academic_session,
+            semester_type=data['semester_type'],
+        )
+        course = Course.objects.create(
+            course_code=data['course_code'],
+            course_name=data['course_name'],
+            lecturer=request.user.lecturer_profile,
+            academic_session=academic_session,
+            semester=semester,
+            target_levels=data['target_levels'],
+            target_departments=data['target_departments'],
+        )
+        return Response(CourseSerializer(course).data, status=status.HTTP_201_CREATED)
 
     def _assert_owns_course(self, course):
         """Raise PermissionDenied if the requesting lecturer does not own the course."""

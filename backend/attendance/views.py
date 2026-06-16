@@ -1,6 +1,7 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, generics, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied, ValidationError
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
@@ -13,6 +14,7 @@ from .serializers import (
     PinResponseSerializer,
     MarkAttendanceSerializer,
     AttendanceRecordSerializer,
+    StudentHistoryRecordSerializer,
 )
 
 
@@ -46,9 +48,16 @@ class AttendanceSessionViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == 'create':
             return [IsAuthenticated(), IsLecturerOrClassRep()]
-        if self.action == 'mark':
-            return [IsAuthenticated(), IsStudent()]
+        if self.action in ('mark', 'retrieve'):
+            return [IsAuthenticated()]
         return [IsAuthenticated()]
+
+    def retrieve(self, request, *args, **kwargs):
+        """Students can fetch session info to see course/date before submitting a PIN."""
+        if request.user.role == 'student':
+            instance = get_object_or_404(AttendanceSession, pk=kwargs['pk'])
+            return Response(self.get_serializer(instance).data)
+        return super().retrieve(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         """Validate ownership before saving and attach created_by."""
@@ -103,7 +112,8 @@ class AttendanceSessionViewSet(viewsets.ModelViewSet):
         Student submits the 6-digit PIN to mark attendance.
         Every failed attempt is logged with a reason for the audit trail.
         """
-        session = self.get_object()
+        # Bypass the lecturer/class-rep-scoped queryset so any student can mark.
+        session = get_object_or_404(AttendanceSession, pk=pk)
         student = request.user.student_profile
 
         # Prevent a second successful record.
@@ -189,3 +199,19 @@ class AttendanceSessionViewSet(viewsets.ModelViewSet):
         session.is_active = False
         session.save(update_fields=['is_active'])
         return Response({'detail': 'Attendance session closed.'})
+
+
+class StudentAttendanceHistoryView(generics.ListAPIView):
+    """
+    GET /attendance/my-records/
+    Returns all attendance records for the authenticated student, newest first.
+    """
+    permission_classes = [IsAuthenticated, IsStudent]
+    serializer_class = StudentHistoryRecordSerializer
+
+    def get_queryset(self):
+        return (
+            AttendanceRecord.objects.filter(student=self.request.user.student_profile)
+            .select_related('attendance_session__course')
+            .order_by('-timestamp')
+        )
