@@ -25,7 +25,7 @@ export default function ClassRepDashboard() {
       <div className="max-w-2xl mx-auto">
 
         {/* Header */}
-        <div className="mb-10">
+        <div className="mb-6 sm:mb-10">
           <h1
             className="font-display font-bold tracking-tight leading-tight mb-2"
             style={{ fontSize: 'clamp(1.75rem, 3vw, 2.25rem)', color: 'var(--text-primary)' }}
@@ -39,7 +39,7 @@ export default function ClassRepDashboard() {
 
         {/* Stats strip */}
         <div
-          className="flex items-center gap-8 mb-10 pb-10"
+          className="flex items-center gap-5 sm:gap-8 mb-6 pb-6 sm:mb-10 sm:pb-10"
           style={{ borderBottom: '1px solid var(--border)' }}
         >
           <div>

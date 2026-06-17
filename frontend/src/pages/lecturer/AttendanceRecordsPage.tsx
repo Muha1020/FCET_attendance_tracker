@@ -51,7 +51,7 @@ export default function AttendanceRecordsPage() {
     <DashboardLayout navItems={lecturerNav} roleLabel="Lecturer">
       <div className="max-w-3xl mx-auto">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm mb-8" style={{ color: 'var(--text-muted)' }}>
+        <div className="flex items-center flex-wrap gap-2 text-sm mb-6 sm:mb-8" style={{ color: 'var(--text-muted)' }}>
           <Link to="/lecturer/courses" className="hover:text-white transition-colors">Courses</Link>
           <span>/</span>
           <Link
@@ -65,7 +65,7 @@ export default function AttendanceRecordsPage() {
         </div>
 
         {/* Header */}
-        <div className="mb-10">
+        <div className="mb-6 sm:mb-10">
           <h1
             className="font-display font-bold tracking-tight mb-1"
             style={{ fontSize: 'clamp(1.5rem, 2.5vw, 2rem)', color: 'var(--text-primary)' }}
@@ -77,7 +77,7 @@ export default function AttendanceRecordsPage() {
 
         {/* Stats strip */}
         <div
-          className="flex items-center gap-8 mb-10 pb-10"
+          className="flex items-center gap-5 sm:gap-8 mb-6 pb-6 sm:mb-10 sm:pb-10"
           style={{ borderBottom: '1px solid var(--border)' }}
         >
           <div>

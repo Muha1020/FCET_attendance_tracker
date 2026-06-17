@@ -60,7 +60,7 @@ export default function AttendanceSessionPage() {
 
       <div className="max-w-2xl mx-auto">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm mb-8" style={{ color: 'var(--text-muted)' }}>
+        <div className="flex items-center flex-wrap gap-2 text-sm mb-6 sm:mb-8" style={{ color: 'var(--text-muted)' }}>
           <Link to="/lecturer/courses" className="hover:text-white transition-colors">Courses</Link>
           <span>/</span>
           <Link
@@ -74,7 +74,7 @@ export default function AttendanceSessionPage() {
         </div>
 
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 mb-10">
+        <div className="flex items-start justify-between gap-4 mb-6 sm:mb-10">
           <div>
             <h1
               className="font-display font-bold tracking-tight mb-1"
@@ -93,7 +93,7 @@ export default function AttendanceSessionPage() {
 
         {/* PIN area */}
         <div
-          className="py-10 text-center mb-8"
+          className="py-7 sm:py-10 text-center mb-6 sm:mb-8"
           style={{ borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}
         >
           {!session?.is_active ? (

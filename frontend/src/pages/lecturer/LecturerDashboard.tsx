@@ -27,7 +27,7 @@ export default function LecturerDashboard() {
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 mb-10">
+        <div className="flex items-start justify-between gap-4 flex-wrap mb-6 sm:mb-10">
           <div>
             <h1
               className="font-display font-bold tracking-tight leading-tight mb-1"
@@ -46,7 +46,7 @@ export default function LecturerDashboard() {
 
         {/* Stats strip */}
         <div
-          className="flex items-center gap-8 mb-10 pb-10"
+          className="flex items-center gap-5 sm:gap-8 mb-6 pb-6 sm:mb-10 sm:pb-10"
           style={{ borderBottom: '1px solid var(--border)' }}
         >
           <div>

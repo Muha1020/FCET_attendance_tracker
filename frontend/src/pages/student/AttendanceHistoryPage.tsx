@@ -70,7 +70,7 @@ export default function AttendanceHistoryPage() {
           <>
             {/* Stats strip */}
             <div
-              className="flex items-center gap-8 mb-10 pb-10"
+              className="flex items-center gap-5 sm:gap-8 mb-6 pb-6 sm:mb-10 sm:pb-10"
               style={{ borderBottom: '1px solid var(--border)' }}
             >
               <div>

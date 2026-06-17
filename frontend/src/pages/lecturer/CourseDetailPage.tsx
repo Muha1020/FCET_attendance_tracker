@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import DashboardLayout from '../../components/layout/DashboardLayout'
 import { useCourse, useCourseStudents, useAssignClassRep } from '../../hooks/useCourses'
-import { useCreateAttendanceSession } from '../../hooks/useAttendance'
+import { useCreateAttendanceSession, useAttendanceSessions } from '../../hooks/useAttendance'
 import PageLoader from '../../components/ui/PageLoader'
 import Toast from '../../components/ui/Toast'
 import { extractErrorMessage } from '../../utils/errors'
@@ -16,8 +16,11 @@ export default function CourseDetailPage() {
 
   const { data: course, isLoading: courseLoading } = useCourse(courseId)
   const { data: students, isLoading: studentsLoading } = useCourseStudents(courseId)
+  const { data: allSessions } = useAttendanceSessions()
   const { mutateAsync: assignRep, isPending: assigningRep } = useAssignClassRep(courseId)
   const { mutateAsync: openSession, isPending: openingSession } = useCreateAttendanceSession()
+
+  const courseSessions = allSessions?.filter((s) => s.course === courseId) ?? []
 
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null)
   const [assigningId, setAssigningId] = useState<number | null>(null)
@@ -61,14 +64,14 @@ export default function CourseDetailPage() {
 
       <div className="max-w-3xl mx-auto">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm mb-8" style={{ color: 'var(--text-muted)' }}>
+        <div className="flex items-center flex-wrap gap-2 text-sm mb-6 sm:mb-8" style={{ color: 'var(--text-muted)' }}>
           <Link to="/lecturer/courses" className="hover:text-white transition-colors">Courses</Link>
           <span>/</span>
           <span style={{ color: 'var(--text-primary)' }}>{course.course_code}</span>
         </div>
 
         {/* Course header */}
-        <div className="mb-10">
+        <div className="mb-6 sm:mb-10">
           <span className="font-mono text-xs" style={{ color: 'var(--accent)' }}>
             {course.course_code}
           </span>
@@ -82,13 +85,61 @@ export default function CourseDetailPage() {
             {course.session_name} · {course.semester_type} · Levels {course.target_levels.join(', ')} · {course.target_departments.join(', ')}
           </p>
           <div className="flex gap-3 mt-6">
-            <Link to={`/lecturer/records/${courseId}`} className="btn-ghost text-sm">
-              View records
-            </Link>
             <button className="btn-primary text-sm" onClick={handleOpenSession} disabled={openingSession}>
               {openingSession ? 'Opening…' : 'Open session'}
             </button>
           </div>
+        </div>
+
+        {/* Sessions */}
+        <div style={{ borderTop: '1px solid var(--border)' }} className="pt-8 mb-10">
+          <p
+            className="text-xs font-medium uppercase mb-5"
+            style={{ color: 'var(--text-muted)', letterSpacing: '0.14em' }}
+          >
+            Sessions — {courseSessions.length}
+          </p>
+          {courseSessions.length === 0 ? (
+            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+              No sessions yet. Open one to start tracking attendance.
+            </p>
+          ) : (
+            courseSessions
+              .slice()
+              .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+              .map((s) => (
+                <div
+                  key={s.id}
+                  className="flex items-center justify-between py-3.5 gap-4"
+                  style={{ borderBottom: '1px solid var(--border)' }}
+                >
+                  <div>
+                    <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                      {s.date}
+                    </p>
+                    <p className="text-xs mt-0.5" style={{ color: s.is_active ? 'var(--success)' : 'var(--text-muted)' }}>
+                      {s.is_active ? 'Active' : 'Closed'}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3 shrink-0">
+                    {s.is_active && (
+                      <Link
+                        to={`/lecturer/attendance/${s.id}`}
+                        className="btn-ghost text-xs py-1.5 px-3"
+                      >
+                        Manage
+                      </Link>
+                    )}
+                    <Link
+                      to={`/lecturer/records/${s.id}`}
+                      className="btn-ghost text-xs py-1.5 px-3"
+                    >
+                      Records
+                    </Link>
+                  </div>
+                </div>
+              ))
+          )}
         </div>
 
         {/* Student list */}

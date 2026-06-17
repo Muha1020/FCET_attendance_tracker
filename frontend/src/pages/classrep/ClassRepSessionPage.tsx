@@ -55,14 +55,14 @@ export default function ClassRepSessionPage() {
 
       <div className="max-w-2xl mx-auto">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm mb-8" style={{ color: 'var(--text-muted)' }}>
+        <div className="flex items-center flex-wrap gap-2 text-sm mb-6 sm:mb-8" style={{ color: 'var(--text-muted)' }}>
           <Link to="/classrep/courses" className="hover:text-white transition-colors">Rep Courses</Link>
           <span>/</span>
           <span style={{ color: 'var(--text-primary)' }}>{session?.course_code}</span>
         </div>
 
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 mb-10">
+        <div className="flex items-start justify-between gap-4 mb-6 sm:mb-10">
           <div>
             <h1
               className="font-display font-bold tracking-tight mb-1"
@@ -114,7 +114,7 @@ export default function ClassRepSessionPage() {
         </div>
 
         {/* Live counts */}
-        <div className="flex items-center gap-8 py-8" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="flex items-center gap-5 sm:gap-8 py-6 sm:py-8" style={{ borderBottom: '1px solid var(--border)' }}>
           <div>
             <p
               className="font-display font-bold text-4xl leading-none"

@@ -24,7 +24,7 @@ export default function StudentDashboard() {
       <div className="max-w-2xl mx-auto">
 
         {/* Header */}
-        <div className="mb-10">
+        <div className="mb-6 sm:mb-10">
           <h1
             className="font-display font-bold tracking-tight leading-tight mb-2"
             style={{ fontSize: 'clamp(1.75rem, 3vw, 2.25rem)', color: 'var(--text-primary)' }}
@@ -37,7 +37,7 @@ export default function StudentDashboard() {
         </div>
 
         {/* Course count */}
-        <div className="mb-10 pb-10" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="mb-6 pb-6 sm:mb-10 sm:pb-10" style={{ borderBottom: '1px solid var(--border)' }}>
           <div className="flex items-baseline gap-3">
             <span
               className="font-display font-bold leading-none"
